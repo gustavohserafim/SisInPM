@@ -11,6 +11,7 @@ from zenora import APIClient
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -74,14 +75,15 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    token = session.get('token')
 
-    if user_id is None:
-        g.user = None
+    bearer_client = APIClient(token, bearer=True)
+    current_user = bearer_client.users.get_current_user()
+
+    if token is None:
+        g.token = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        g.token = token  # TODO
 
 
 @bp.route('/logout')
@@ -95,10 +97,6 @@ def callback():
     code = request.args.get("code")
     access_token = current_app.bot_client.oauth.get_access_token(code, REDIRECT_URI).access_token
     session["token"] = access_token
-
-    bearer_client = APIClient(access_token, bearer=True)
-    current_user = bearer_client.users.get_current_user()
-
     return redirect("/")
 
 
