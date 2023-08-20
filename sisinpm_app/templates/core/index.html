@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block header %}
+  <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h2>Bem-vindo! {{ g.user.graduacao_abreviada }} {{ g.user.qra }}</h2>
+    <p>{{ g.user }}</p>
+    {% if g.estagiario %}
+        <p>Sem bizonhice estagio!</p>
+    {% endif %}
+{% endblock %}

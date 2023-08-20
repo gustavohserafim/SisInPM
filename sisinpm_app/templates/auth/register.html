@@ -5,11 +5,29 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
+  <form method="post" action="">
+  <label for="graduacao">Graduação:</label>
+      <select name="graduacao" id="graduacao" required>
+          {% for tg in tipo_graduacoes %}
+              <optgroup label="{{ tg.tipo_graduacao }}">
+              {% for g in tg.graduacoes %}
+                    <option value="{{ g.id }}"> {{ g.graduacao_abreviada }}</option>
+
+              {% endfor %}
+            </optgroup>
+          {% endfor %}
+      </select>
+    <label for="qra">Nome de farda</label>
+  <input type="text" name="qra" id="qra" required>
+    <label for="email">Email</label>
+    <input name="email" id="email" type="email" required>
+    <label for="password">Senha</label>
+    <input type="password" name="password" id="password" minlength="3" required >
+    <label for="estagio">Estagiario:</label>
+    <select name="estagio" id="estagio" required>
+        <option value="1">Sim</option>
+        <option value="0">Não</option>
+    </select>
     <input type="submit" value="Register">
   </form>
 {% endblock %}

@@ -1,41 +1,88 @@
-import sqlite3
-
-import click
-from flask import current_app, g
+import mysql.connector
+from config import DB_USER, DB_PASS, DB_HOST, DB_SCHEMA
 
 
-def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        g.db.row_factory = sqlite3.Row
+class DB:
 
-    return g.db
+    def __init__(self):
+        config = {
+            'user': DB_USER,
+            'password': DB_PASS,
+            'host': DB_HOST,
+            'database': DB_SCHEMA,
+            'auth_plugin': 'mysql_native_password'
+        }
 
+        self._conn = mysql.connector.connect(**config)
+        self._cur = self._conn.cursor(dictionary=True)
 
-def close_db(e=None):
-    db = g.pop('db', None)
+    def _execute(self, sql, params=None):
+        """
+        Executes a SQL command and returns its cursor
+        "protected" method - Internal use only
+        :param sql: str
+        :param params: str
+        :return: MySQL Connector Cursor object
+        """
+        if params is not None:
+            cur = self._cur
+            cur.execute(sql, params)
+            return cur
+        cur = self._cur
+        cur.execute(sql)
+        return cur
 
-    if db is not None:
-        db.close()
+    def run_fa(self, sql):
+        """
+        Runs a SQL fetching all result lines
+        :param sql: string
+        :return: list of dicts or False
+        """
+        try:
+            return self._execute(sql).fetchall()
+        except Exception as e:
+            print(e)
+            return False
 
+    def run_fr(self, sql):
+        """
+        Runs a SQL fetching one row
+        :param sql: string
+        :return: dict or False
+        """
+        try:
+            return self._execute(sql).fetchone()
+        except Exception as e:
+            print(e)
+            return False
 
-def init_db():
-    db = get_db()
+    def run_fv(self, sql, value_name):
+        """
+        Runs a SQL fetching a value
+        :param sql:
+        :param value_name:
+        :return: string or False
+        """
+        try:
+            return self._execute(sql).fetchone()[value_name]
+        except Exception as e:
+            print(e)
+            return False
 
-    with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
+    def run(self, sql):
+        """
+        Runs a SQL without result fetching
+        Use with UPDATE or INSERT SQL commands
+        :param sql: string
+        :return: boolean
+        """
+        try:
+            self._execute(sql)
+            self._conn.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
-
-@click.command('init-db')
-def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Initialized the database.')
-
-
-def init_app(app):
-    app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
+    def __del__(self):
+        self._conn.close()

@@ -1,8 +1,5 @@
 import os
-
 from flask import Flask
-from zenora import APIClient
-from config import TOKEN, CLIENT_SECRET
 
 
 def create_app(test_config=None):
@@ -12,8 +9,6 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
-
-    app.bot_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -27,9 +22,6 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    from . import db
-    db.init_app(app)
 
     from . import core, auth
     app.register_blueprint(core.bp)
