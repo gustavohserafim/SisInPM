@@ -6,10 +6,11 @@
 
 {% block content %}
     <form method="post" action="">
-    <label for="email">Email</label>
-    <input name="email" id="email" type="email" required>
-    <label for="password">Senha</label>
-    <input type="password" name="password" id="password" minlength="3" required >
+    <label for="email">Email</label><br/>
+    <input name="email" id="email" type="email" required><br/>
+    <label for="password">Senha</label><br/>
+    <input type="password" name="password" id="password" minlength="3" required ><br/><br/>
     <input type="submit" value="Login">
   </form>
+    <p>Não tem cadastro? <a href="{{ url_for("auth.register") }}">Cadastrar</a></p>
 {% endblock %}

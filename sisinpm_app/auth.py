@@ -12,13 +12,13 @@ def login_required(view):
         if g.user is None:
             return redirect(url_for("auth.login"))
         return view(**kwargs)
+
     return wrapped_view
 
 
 @bp.before_app_request
 def load_logged_in_user():
     user = session.get("user")
-
     if user is None:
         g.user = None
     else:
@@ -31,7 +31,8 @@ def register():
 
     if request.method == "POST":
         data = request.form
-        create = controller.UserController.create(data.get('email'), data.get('password'), data.get('qra'), data.get('graduacao'), data.get('estagio'))
+        create = controller.UserController.create(data.get('email'), data.get('password'), data.get('qra'),
+                                                  data.get('graduacao'), data.get('estagio'))
         if create:
             return redirect("/")
         flash("Email já cadastrado.")
