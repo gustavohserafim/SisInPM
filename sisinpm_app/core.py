@@ -20,7 +20,9 @@ def avaliar():
     if request.method == "POST":
         avaliacao_data = request.form
 
-        if CoreController.avaliar(g.user.get("id"), avaliacao_data.get("avaliado"), avaliacao_data.get("qualidades"), avaliacao_data.get("novidades"), avaliacao_data.get("nota"), avaliacao_data.get("policial1"), avaliacao_data.get("policial2")):
+        if CoreController.avaliar(g.user.get("id"), avaliacao_data.get("avaliado"), avaliacao_data.get("qualidades"),
+                                  avaliacao_data.get("novidades"), avaliacao_data.get("nota"),
+                                  avaliacao_data.get("policial1"), avaliacao_data.get("policial2")):
             flash("Avaliação cadastrada com sucesso!")
         else:
             flash("Erro ao avaliar!")
@@ -31,6 +33,6 @@ def avaliar():
                                policiais=UserController.get_policiais())
 
 
-@bp.route("/healthcheck", methods=["GET", "POST"])
+@bp.route("/healthcheck", methods=["GET"])
 def health_check():
     return "ok", 200
