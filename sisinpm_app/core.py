@@ -30,3 +30,7 @@ def avaliar():
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
 
+
+@bp.route("/healthcheck", methods=["GET", "POST"])
+def health_check():
+    return "ok", 200
