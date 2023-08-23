@@ -34,7 +34,8 @@ def register():
         create = controller.UserController.create(data.get('email'), data.get('password'), data.get('qra'),
                                                   data.get('graduacao'), data.get('estagio'))
         if create:
-            return redirect("/")
+            flash("Usuário cadastro com sucesso, solicite liberação ao seu comandante.")
+            return render_template("auth/register.html", tipo_graduacoes=[])
         flash("Email já cadastrado.")
         return render_template("auth/register.html", tipo_graduacoes=tipo_graduacoes)
     else:
