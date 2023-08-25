@@ -11,8 +11,6 @@ bp = Blueprint("core", __name__, url_prefix="/")
 @bp.route("", methods=("GET", "POST"))
 @login_required
 def index():
-    from config import DB_USER, DB_PASS, DB_HOST, DB_SCHEMA
-    print("VARS:" + DB_USER, DB_PASS, DB_HOST, DB_SCHEMA)
     return render_template("core/index.html")
 
 
@@ -31,6 +29,8 @@ def avaliar():
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
     else:
+        from config import DB_USER, DB_PASS, DB_HOST, DB_SCHEMA
+        print(DB_USER, DB_PASS, DB_HOST, DB_SCHEMA)
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
 
