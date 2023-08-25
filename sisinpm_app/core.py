@@ -2,6 +2,8 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
 
+import logging
+
 from sisinpm_app.auth import login_required
 from sisinpm_app.controller import UserController, CoreController
 
@@ -30,7 +32,7 @@ def avaliar():
                                policiais=UserController.get_policiais())
     else:
         from config import DB_USER, DB_PASS, DB_HOST, DB_SCHEMA
-        print("vars:" + DB_USER, DB_PASS, DB_HOST, DB_SCHEMA)
+        logging.log("INFO", "vars: " + DB_USER+DB_PASS+DB_HOST+DB_SCHEMA)
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
 
