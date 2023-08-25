@@ -54,7 +54,7 @@ class AuthController:
 
     @staticmethod
     def login(email, password):
-        user = db.DB().run_fr(f"SELECT usuario.id as id, graduacao.graduacao_abreviada, usuario.qra, usuario.estagiario, usuario.senha FROM usuario, graduacao WHERE email = '{email}' AND graduacao.id = usuario.graduacao_id;")
+        user = db.DB().run_fr(f"SELECT usuario.id as id, graduacao.graduacao_abreviada, usuario.qra, usuario.estagiario, usuario.senha FROM usuario, graduacao WHERE status = 1 AND email = '{email}' AND graduacao.id = usuario.graduacao_id;")
 
         if user and check_password_hash(user.get("senha"), password):
             user["estagiario"] = bool(user["estagiario"])
