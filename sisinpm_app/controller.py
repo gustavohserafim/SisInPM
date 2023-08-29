@@ -15,7 +15,7 @@ class UserController:
 
     @staticmethod
     def get_policiais():
-        return db.DB().run_fa(f"SELECT usuario.id as id, graduacao_id, qra, email, estagiario, graduacao_id, graduacao.graduacao_abreviada FROM usuario, graduacao WHERE status = 1 AND graduacao.id = graduacao_id;")
+        return db.DB().run_fa(f"SELECT usuario.id as id, graduacao_id, qra, email, estagiario, graduacao_id, graduacao.graduacao_abreviada FROM usuario, graduacao WHERE status = 1 AND graduacao.id = graduacao_id ORDER BY graduacao_id;")
 
     @staticmethod
     def create(email, password, qra, graduacao, is_estagio):
