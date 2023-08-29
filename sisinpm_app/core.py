@@ -31,8 +31,6 @@ def avaliar():
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
     else:
-        from config import DB_USER, DB_PASS, DB_HOST, DB_SCHEMA
-        logging.log(1, "vars: " + DB_USER+DB_PASS+DB_HOST+DB_SCHEMA)
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
 
