@@ -77,3 +77,7 @@ class CoreController:
         if avaliador and avaliado and policial_1 and policial_2:
             return db.DB().run(f"INSERT INTO avaliacao (avaliador_id, avaliado_id, nota, qualidades, novidades, policial_presente1_id, policial_presente2_id) VALUES ({avaliador_id}, {avaliado_id}, {nota}, '{qualidades}', '{novidades}', {policial_1_id}, {policial_2})");
         return False
+
+    @staticmethod
+    def get_all_avaliacoes():
+        return
