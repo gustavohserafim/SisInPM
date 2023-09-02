@@ -16,7 +16,7 @@ def index():
     return render_template("core/index.html")
 
 
-@bp.route("/avaliar", methods=["GET", "POST"])
+@bp.route("/avaliacao/nova", methods=["GET", "POST"])
 @login_required
 def avaliar():
     if request.method == "POST":
@@ -33,6 +33,12 @@ def avaliar():
     else:
         return render_template("core/avaliar.html", estagios=UserController.get_estagios(),
                                policiais=UserController.get_policiais())
+
+
+@bp.route("/avaliacao/todas", methods=["GET"])
+@login_required
+def get_avaliacoes():
+    return render_template("core/avaliacoes.html")
 
 
 @bp.route("/healthcheck", methods=["GET"])
