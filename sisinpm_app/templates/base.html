@@ -25,7 +25,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{{ url_for('core.avaliar') }}">Avaliar</a>
-                    <a class="dropdown-item" href="{{ url_for('core.get_avaliacoes') }}">Listar</a>
+                    <a class="dropdown-item disabled" href="{{ url_for('core.get_avaliacoes') }}">Listar</a>
                 </div>
             </li>
             {% if g.user %}
