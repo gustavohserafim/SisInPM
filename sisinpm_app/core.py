@@ -38,7 +38,8 @@ def avaliar():
 @bp.route("/avaliacao/todas", methods=["GET"])
 @login_required
 def get_avaliacoes():
-    return render_template("core/avaliacoes.html")
+    avaliacoes = CoreController.get_all_avaliacoes()
+    return render_template("core/avaliacoes.html", avalicoes_headers=avaliacoes[0].keys(), avaliacoes=avaliacoes)
 
 
 @bp.route("/healthcheck", methods=["GET"])
