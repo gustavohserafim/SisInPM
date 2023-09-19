@@ -1,4 +1,4 @@
-from sisinpm_app import db
+from sisinpm_app.db import DB
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -7,22 +7,22 @@ class UserController:
         self.id = user_id
 
     def get(self):
-        return db.DB().run_fr(f"SELECT id, graduacao_id, qra, estagiario FROM usuario WHERE id = {self.id} AND status = 1 ;")
+        return DB().run_fr(f"SELECT id, graduacao_id, qra, estagiario FROM usuario WHERE id = {self.id} AND status = 1 ;")
 
     @staticmethod
     def get_estagios():
-        return db.DB().run_fa(f"SELECT usuario.id as id, graduacao_id, qra, email, estagiario, graduacao_id, graduacao.graduacao_abreviada FROM usuario, graduacao WHERE status = 1 AND estagiario = 1 AND graduacao.id = graduacao_id;")
+        return DB().run_fa(f"SELECT usuario.id as id, graduacao_id, qra, email, estagiario, graduacao_id, graduacao.graduacao_abreviada FROM usuario, graduacao WHERE status = 1 AND estagiario = 1 AND graduacao.id = graduacao_id;")
 
     @staticmethod
     def get_policiais():
-        return db.DB().run_fa(f"SELECT usuario.id as id, graduacao_id, qra, email, estagiario, graduacao_id, graduacao.graduacao_abreviada FROM usuario, graduacao WHERE status = 1 AND graduacao.id = graduacao_id ORDER BY graduacao_id;")
+        return DB().run_fa(f"SELECT usuario.id as id, graduacao_id, qra, email, estagiario, graduacao_id, graduacao.graduacao_abreviada FROM usuario, graduacao WHERE status = 1 AND graduacao.id = graduacao_id ORDER BY graduacao_id;")
 
     @staticmethod
     def create(email, password, qra, graduacao, is_estagio):
-        user = db.DB().run_fv(f"SELECT id FROM usuario WHERE email = '{email}';", 'id')
+        user = DB().run_fv(f"SELECT id FROM usuario WHERE email = '{email}';", 'id')
         if user:
             return False
-        db.DB().run(f"INSERT INTO usuario (graduacao_id, qra, email, senha, estagiario) VALUES ({graduacao}, '{qra}', '{email}', '{generate_password_hash(password)}', {is_estagio});")
+        DB().run(f"INSERT INTO usuario (graduacao_id, qra, email, senha, estagiario) VALUES ({graduacao}, '{qra}', '{email}', '{generate_password_hash(password)}', {is_estagio});")
         return True
 
 
@@ -32,8 +32,8 @@ class AuthController:
 
     @staticmethod
     def get_graduacoes():
-        tipo_graduacoes = db.DB().run_fa("SELECT id, tipo_graduacao FROM tipo_graduacao;")
-        graduacoes = db.DB().run_fa("SELECT id, graduacao, graduacao_abreviada, tipo_graduacao_id FROM graduacao;")
+        tipo_graduacoes = DB().run_fa("SELECT id, tipo_graduacao FROM tipo_graduacao;")
+        graduacoes = DB().run_fa("SELECT id, graduacao, graduacao_abreviada, tipo_graduacao_id FROM graduacao;")
 
         for k, v in enumerate(tipo_graduacoes):
             tipo_graduacoes[k]["graduacoes"] = []
@@ -54,7 +54,7 @@ class AuthController:
 
     @staticmethod
     def login(email, password):
-        user = db.DB().run_fr(f"SELECT usuario.id as id, graduacao.graduacao_abreviada, usuario.qra, usuario.estagiario, usuario.senha FROM usuario, graduacao WHERE status = 1 AND email = '{email}' AND graduacao.id = usuario.graduacao_id;")
+        user = DB().run_fr(f"SELECT usuario.id as id, graduacao.graduacao_abreviada, usuario.qra, usuario.estagiario, usuario.senha FROM usuario, graduacao WHERE status = 1 AND email = '{email}' AND graduacao.id = usuario.graduacao_id;")
 
         if user and check_password_hash(user.get("senha"), password):
             user["estagiario"] = bool(user["estagiario"])
@@ -75,9 +75,9 @@ class CoreController:
         policial_2 = policial_2_id if int(policial_2_id) > 0 else "NULL"
 
         if avaliador and avaliado and policial_1 and policial_2:
-            return db.DB().run(f"INSERT INTO avaliacao (avaliador_id, avaliado_id, nota, qualidades, novidades, policial_presente1_id, policial_presente2_id) VALUES ({avaliador_id}, {avaliado_id}, {nota}, '{qualidades}', '{novidades}', {policial_1_id}, {policial_2})");
+            return DB().run(f"INSERT INTO avaliacao (avaliador_id, avaliado_id, nota, qualidades, novidades, policial_presente1_id, policial_presente2_id) VALUES ({avaliador_id}, {avaliado_id}, {nota}, '{qualidades}', '{novidades}', {policial_1_id}, {policial_2})");
         return False
 
     @staticmethod
     def get_all_avaliacoes():
-        return
+        return DB().run_fa("SELECT avaliacao.id, usuario.qra, nota, qualidades, novidades, avaliacao.created_at as data_avaliacao FROM avaliacao, usuario WHERE usuario.id = avaliado_id;")
