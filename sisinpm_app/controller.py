@@ -7,7 +7,13 @@ class UserController:
         self.id = user_id
 
     def get(self):
-        return DB().run_fr(f"SELECT id, graduacao_id, qra, estagiario FROM usuario WHERE id = {self.id} AND status = 1 ;")
+        user = DB().run_fr(f"SELECT id, graduacao_id, qra, estagiario FROM usuario WHERE id = {self.id} AND status = 1;")
+        user["graduacao"] = self.get_graduacao_text()
+        return user
+
+    def get_graduacao_text(self):
+        graduacao_id = DB().run_fv(f"SELECT graduacao_id FROM usuario WHERE id = {self.id} ;", "graduacao_id")
+        return DB().run_fv(f"SELECT graduacao_abreviada FROM sisinpm.graduacao WHERE id = {graduacao_id};", "graduacao_abreviada")
 
     @staticmethod
     def get_estagios():
@@ -81,3 +87,7 @@ class CoreController:
     @staticmethod
     def get_all_avaliacoes():
         return DB().run_fa("SELECT avaliacao.id, usuario.qra, nota, qualidades, novidades, avaliacao.created_at as data_avaliacao FROM avaliacao, usuario WHERE usuario.id = avaliado_id;")
+
+    @staticmethod
+    def get_avaliacao(avaliacao_id):
+        return DB().run_fr(f"SELECT id, avaliador_id, avaliado_id, nota, qualidades, novidades, policial_presente1_id, policial_presente2_id, created_at FROM sisinpm.avaliacao WHERE id = {avaliacao_id};")
