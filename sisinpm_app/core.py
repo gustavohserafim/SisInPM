@@ -41,6 +41,18 @@ def get_avaliacoes():
     return render_template("core/avaliacoes.html", avaliacoes=CoreController.get_all_avaliacoes())
 
 
+@bp.route("/avaliacao/<avaliacao_id>", methods=["GET"])
+@login_required
+def get_avaliacao(avaliacao_id):
+    avaliacao = CoreController.get_avaliacao(avaliacao_id)
+    estagiario = UserController(avaliacao.get("avaliado_id")).get()
+    avaliador = UserController(avaliacao.get("avaliador_id")).get()
+    policial1 = UserController(avaliacao.get("policial_presente1_id")).get()
+    policial2 = UserController(avaliacao.get("policial_presente2_id")).get()
+    return render_template("core/avaliacao.html", avaliacao=avaliacao, avaliador=avaliador,
+                           estagiario=estagiario, policial1=policial1, policial2=policial2)
+
+
 @bp.route("/healthcheck", methods=["GET"])
 def health_check():
     return "ok", 200
