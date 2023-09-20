@@ -7,7 +7,6 @@
 {% block content %}
     <br/>
     <table class="table table-striped">
-
         <thead>
         <tr>
             <th scope="col"> #</th>
@@ -16,7 +15,7 @@
             <th scope="col"> Qualidades</th>
             <th scope="col"> Novidades</th>
             <th scope="col"> Data da avaliação</th>
-            {#        <th>Ver completa</th>#}
+            <th>Ver completa</th>
         </tr>
         </thead>
         <tbody>
@@ -28,7 +27,7 @@
                 <td>{{ a["qualidades"] }}</td>
                 <td>{{ a["novidades"] }}</td>
                 <td>{{ a["data_avaliacao"] }}</td>
-                {#                <td><a href="/avaliacao/{{ a["id"] }}">Ver</a></td>#}
+                <td><a href="/avaliacao/{{ a["id"] }}">Ver</a></td>
             </tr>
         {% endfor %}
         </tbody>
